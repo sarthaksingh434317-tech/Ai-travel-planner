@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found – TravelGenius AI{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-auto">
+  <div class="py-5 max-w-700 mx-auto">
+    <div class="display-1 fw-bold text-primary mb-3">404</div>
+    <div class="p-4 rounded-circle bg-light d-inline-block mb-3">
+      <i class="fas fa-compass fa-3x text-muted"></i>
+    </div>
+    <h2 class="fw-bold text-secondary mb-2">Off the Beaten Path</h2>
+    <p class="text-muted mb-4">
+      The page or travel route you are looking for doesn't exist or has moved. Let's get you back on track!
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{{ url_for('index') }}" class="btn btn-primary-gradient">
+        <i class="fas fa-home me-1"></i> Back to Home
+      </a>
+      <a href="{{ url_for('plan') }}" class="btn btn-outline-secondary">
+        <i class="fas fa-magic me-1"></i> Plan a Trip
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

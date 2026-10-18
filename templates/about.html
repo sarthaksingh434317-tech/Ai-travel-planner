@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}About TravelGenius AI – Modern Generative AI Travel Architect{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  
+  <div class="text-center max-w-700 mx-auto mb-5">
+    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 mb-2">
+      <i class="fas fa-info-circle me-1"></i> Architecture & Engineering
+    </span>
+    <h1 class="fw-bold text-secondary display-6">About TravelGenius AI</h1>
+    <p class="text-muted">
+      An enterprise-grade, modern generative AI web application engineered to democratize personalized holiday planning.
+    </p>
+  </div>
+
+  <div class="row g-4 mb-5">
+    <div class="col-lg-8">
+      <!-- Mission & Overview -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <h3 class="fw-bold text-secondary mb-3">
+          <i class="fas fa-compass text-primary me-2"></i> Our Engineering Vision
+        </h3>
+        <p class="text-muted">
+          Traditional travel planning is fragmented and overwhelming. Travelers spend an average of 10 to 20 hours
+          navigating disparate travel forums, blog posts, booking portals, and transit timetables.
+        </p>
+        <p class="text-muted">
+          <strong>TravelGenius AI</strong> solves this by pairing Google’s latest Gemini large language models with
+          structured data pipelines. Users provide their origin, destination, budget in INR, dates, travel style, and dietary requirements.
+          The AI synthesizes a comprehensive, time-blocked holiday schedule with morning, afternoon, and evening activities,
+          gastronomy highlights, neighborhood suggestions, transit tips, and weather backups.
+        </p>
+      </div>
+
+      <!-- Technology Stack -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <h3 class="fw-bold text-secondary mb-3">
+          <i class="fas fa-layer-group text-primary me-2"></i> Technology Stack
+        </h3>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <strong class="text-secondary d-block mb-1"><i class="fab fa-python text-primary me-1"></i> Backend Core</strong>
+              <p class="text-muted small mb-0">Python 3.14 &amp; Flask microframework. RESTful architecture with JSON validation and modular services.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <strong class="text-secondary d-block mb-1"><i class="fas fa-sparkles text-warning me-1"></i> Generative AI Engine</strong>
+              <p class="text-muted small mb-0">Google Gemini API via official <code>google-genai</code> SDK and REST fallback with strict JSON schemas.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <strong class="text-secondary d-block mb-1"><i class="fas fa-database text-success me-1"></i> Local Persistence</strong>
+              <p class="text-muted small mb-0">SQLite 3 engine with zero-dependency lightweight relational storage for saving and managing trips.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3 h-100">
+              <strong class="text-secondary d-block mb-1"><i class="fab fa-bootstrap text-purple me-1"></i> Frontend &amp; UI/UX</strong>
+              <p class="text-muted small mb-0">HTML5, CSS3, Bootstrap 5.3, Font Awesome 6.5, Vanilla JS, and responsive glassmorphism design tokens.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Responsible AI Principles -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h3 class="fw-bold text-secondary mb-3">
+          <i class="fas fa-shield-alt text-primary me-2"></i> Responsible AI &amp; Transparency
+        </h3>
+        <ul class="list-unstyled text-muted small mb-0">
+          <li class="mb-3 d-flex align-items-start">
+            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+            <div>
+              <strong class="text-secondary">No Fake Live Inventories:</strong>
+              We do not fabricate live flight tickets, room availability, or real-time booking statuses. All costs are framed as estimates in INR.
+            </div>
+          </li>
+          <li class="mb-3 d-flex align-items-start">
+            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+            <div>
+              <strong class="text-secondary">Explicit Demo Mode Labeling:</strong>
+              If a Gemini API key is missing or unreachable, the system transparently labels generated itineraries as high-fidelity samples so users are never misled.
+            </div>
+          </li>
+          <li class="d-flex align-items-start">
+            <i class="fas fa-check-circle text-success me-2 mt-1"></i>
+            <div>
+              <strong class="text-secondary">Privacy-First Architecture:</strong>
+              Trip details are stored locally on your machine/server in SQLite. No personal travel itineraries are sold or tracked.
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- Status Card -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+        <h5 class="fw-bold text-secondary mb-3">System Status</h5>
+        <div class="d-flex justify-content-between mb-2 small">
+          <span class="text-muted">Gemini AI Model:</span>
+          <span class="fw-bold text-primary">{{ model_name }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2 small">
+          <span class="text-muted">Server API Key:</span>
+          <span class="badge {{ 'bg-success-subtle text-success' if has_api_key else 'bg-warning-subtle text-warning' }}">
+            {{ 'Configured' if has_api_key else 'Demo Mode' }}
+          </span>
+        </div>
+        <div class="d-flex justify-content-between mb-2 small">
+          <span class="text-muted">Storage:</span>
+          <span class="fw-bold text-secondary">SQLite3 Ready</span>
+        </div>
+        <div class="d-flex justify-content-between small">
+          <span class="text-muted">Base Currency:</span>
+          <span class="fw-bold text-success">INR (₹)</span>
+        </div>
+      </div>
+
+      <!-- Quick Action -->
+      <div class="card border-0 shadow-sm rounded-4 p-4 text-center text-white" style="background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);">
+        <i class="fas fa-magic fa-3x mb-3"></i>
+        <h5 class="fw-bold mb-2">Create Your Next Plan</h5>
+        <p class="small text-white-50 mb-4">Experience the generative travel engine firsthand with custom dates and budget.</p>
+        <a href="{{ url_for('plan') }}" class="btn btn-light text-primary fw-bold">
+          Open Trip Planner
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

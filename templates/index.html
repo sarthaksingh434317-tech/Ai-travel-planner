@@ -1,0 +1,379 @@
+{% extends "base.html" %}
+
+{% block title %}TravelGenius AI – Your Dream Trip, Designed by AI{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-wrapper">
+  <div class="container position-relative py-5">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <div class="hero-badge">
+          <i class="fas fa-sparkles text-warning"></i> Generative AI Travel Planner
+        </div>
+        <h1 class="hero-title">
+          Your Dream Trip, <br>
+          <span class="gradient-text">Designed by AI</span>
+        </h1>
+        <p class="hero-subtitle">
+          Say goodbye to hours of scattered research. TravelGenius AI creates comprehensive,
+          custom itineraries tailored to your dates, budget in INR, travel style, and unique interests in seconds.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('plan') }}" class="btn-primary-gradient">
+            <i class="fas fa-paper-plane"></i> Plan My Trip
+          </a>
+          <a href="{{ url_for('explore') }}" class="btn-secondary-glass">
+            <i class="fas fa-compass"></i> Explore Destinations
+          </a>
+        </div>
+      </div>
+      
+      <div class="col-lg-4 d-none d-lg-block">
+        <!-- Floating Glass Highlight Card -->
+        <div class="glass-panel-dark rounded-4 p-4 shadow-xl">
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="p-3 rounded-circle bg-primary text-white">
+              <i class="fas fa-magic fa-lg"></i>
+            </div>
+            <div>
+              <div class="fw-bold">Intelligent Trip Synthesis</div>
+              <div class="small text-info">Powered by Gemini AI</div>
+            </div>
+          </div>
+          <div class="small text-light mb-3">
+            "Experience tailored schedules with morning, afternoon, and evening activities, local food secrets, and budget estimates in ₹ INR."
+          </div>
+          <div class="d-flex justify-content-between align-items-center border-top border-secondary pt-3 small text-muted">
+            <span><i class="fas fa-bolt text-warning me-1"></i> Fast Generation</span>
+            <span><i class="fas fa-shield-alt text-success me-1"></i> Realistic Estimates</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Destinations Section -->
+<section class="py-5 bg-white">
+  <div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-end mb-4">
+      <div>
+        <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Trending Getaways</span>
+        <h2 class="fw-bold text-secondary mb-0">Popular Destinations</h2>
+      </div>
+      <a href="{{ url_for('explore') }}" class="text-primary fw-bold text-decoration-none mt-2 mt-sm-0">
+        View All 10 Destinations <i class="fas fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="row g-4">
+      {% for dest in popular_destinations %}
+      <div class="col-lg-3 col-md-6">
+        <div class="travel-card">
+          <div class="card-img-wrapper">
+            <img src="{{ dest.image_url }}" alt="{{ dest.name }}" onerror="this.src='{{ url_for('static', filename='images/hero-bg.svg') }}'">
+            <span class="card-badge {{ 'card-badge-domestic' if dest.region == 'Domestic' else 'card-badge-intl' }}">
+              {{ dest.region }}
+            </span>
+            <span class="card-badge-budget">
+              {{ dest.budget_category }}
+            </span>
+          </div>
+          <div class="travel-card-body">
+            <div class="d-flex justify-content-between align-items-start mb-1">
+              <h5 class="fw-bold text-secondary mb-0">{{ dest.name }}</h5>
+              <span class="small text-muted">{{ dest.country }}</span>
+            </div>
+            <p class="text-muted small flex-grow-1 mb-3">
+              {{ dest.tagline }}
+            </p>
+            <div class="d-flex justify-content-between align-items-center small text-muted border-top pt-2 mb-3">
+              <span><i class="far fa-calendar-alt text-primary me-1"></i> {{ dest.ideal_duration }}</span>
+              <span class="fw-bold text-secondary">{{ dest.budget_range_inr.split('–')[0] }}</span>
+            </div>
+            <a href="{{ url_for('plan', destination=dest.name) }}" class="btn btn-outline-primary btn-sm w-100 fw-bold">
+              <i class="fas fa-paper-plane me-1"></i> Plan This Trip
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 bg-main">
+  <div class="container py-4">
+    <div class="text-center max-w-700 mx-auto mb-5">
+      <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Effortless Planning</span>
+      <h2 class="fw-bold text-secondary">How TravelGenius AI Works</h2>
+      <p class="text-muted">Transform your holiday concept into an executable, day-by-day travel itinerary in 3 simple steps.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+          <div class="p-3 rounded-circle bg-primary-subtle text-primary mx-auto mb-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-sliders-h fa-2x"></i>
+          </div>
+          <h5 class="fw-bold text-secondary mb-2">1. Share Preferences</h5>
+          <p class="text-muted small mb-0">
+            Tell us your destination, dates, traveler count, budget in INR, travel style (luxury, adventure, family, romantic), and personal interests.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+          <div class="p-3 rounded-circle bg-info-subtle text-info mx-auto mb-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-brain fa-2x"></i>
+          </div>
+          <h5 class="fw-bold text-secondary mb-2">2. AI Crafts Itinerary</h5>
+          <p class="text-muted small mb-0">
+            Gemini AI synthesizes morning, afternoon, and evening schedules, local food recommendations, daily transport hacks, and budget breakdowns.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 text-center bg-white">
+          <div class="p-3 rounded-circle bg-success-subtle text-success mx-auto mb-3" style="width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-suitcase-rolling fa-2x"></i>
+          </div>
+          <h5 class="fw-bold text-secondary mb-2">3. Pack & Travel</h5>
+          <p class="text-muted small mb-0">
+            Save your plan to SQLite, check off items on your interactive packing list, share with travel buddies, or export a print-ready PDF voucher.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Key Features Section -->
+<section class="py-5 bg-white">
+  <div class="container py-4">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Next-Gen Intelligence</span>
+        <h2 class="fw-bold text-secondary mb-3">Everything You Need for a Seamless Holiday</h2>
+        <p class="text-muted mb-4">
+          TravelGenius AI combines generative machine intelligence with real-world travel logistics to eliminate holiday stress.
+        </p>
+
+        <div class="d-flex gap-3 mb-3">
+          <div class="text-primary fs-4 mt-1"><i class="fas fa-clock"></i></div>
+          <div>
+            <h6 class="fw-bold text-secondary mb-1">Day-by-Day Time-Blocked Schedules</h6>
+            <p class="text-muted small mb-0">Morning, afternoon, and evening activity breakdowns with realistic timing and navigation tips.</p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-3">
+          <div class="text-success fs-4 mt-1"><i class="fas fa-rupee-sign"></i></div>
+          <div>
+            <h6 class="fw-bold text-secondary mb-1">INR Expense Breakdown & Transparency</h6>
+            <p class="text-muted small mb-0">Accurate budget estimates for accommodation, dining, ticket fees, and local transportation in Indian Rupees.</p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-3">
+          <div class="text-warning fs-4 mt-1"><i class="fas fa-cloud-sun"></i></div>
+          <div>
+            <h6 class="fw-bold text-secondary mb-1">Weather-Proof Contingency Backups</h6>
+            <p class="text-muted small mb-0">Monsoon or sudden storm? Instant indoor museum, artisanal workshop, and cooking class alternatives.</p>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <div class="text-info fs-4 mt-1"><i class="fas fa-file-pdf"></i></div>
+          <div>
+            <h6 class="fw-bold text-secondary mb-1">Offline PDF Export & SQLite Persistence</h6>
+            <p class="text-muted small mb-0">Save your generated plans locally, print travel vouchers, and access them anytime in My Trips.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <!-- Interactive Budget Estimator Teaser Card -->
+        <div class="card border-0 shadow-lg rounded-4 p-4 bg-light" id="budget-calculator-form">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-secondary mb-0">
+              <i class="fas fa-calculator text-primary me-2"></i> Quick Trip Budget Estimator
+            </h5>
+            <span class="badge bg-primary-subtle text-primary">Interactive</span>
+          </div>
+          <p class="text-muted small mb-4">Calculate typical travel expenses in INR before creating your itinerary:</p>
+
+          <!-- Duration Slider -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small text-secondary fw-bold mb-1">
+              <span>Duration</span>
+              <span id="calc-days-val" class="text-primary">4 Days</span>
+            </div>
+            <input type="range" class="form-range" id="calc-days" min="2" max="15" value="4">
+          </div>
+
+          <!-- Travelers Slider -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between small text-secondary fw-bold mb-1">
+              <span>Travelers</span>
+              <span id="calc-travelers-val" class="text-primary">2 Travelers</span>
+            </div>
+            <input type="range" class="form-range" id="calc-travelers" min="1" max="8" value="2">
+          </div>
+
+          <!-- Scope -->
+          <div class="mb-3">
+            <label class="form-label small text-secondary fw-bold mb-1">Destination Scope</label>
+            <div class="d-flex gap-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="calc-dest-type" id="scope-dom" value="domestic" checked>
+                <label class="form-check-label small" for="scope-dom">Domestic (India)</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="calc-dest-type" id="scope-intl" value="international">
+                <label class="form-check-label small" for="scope-intl">International</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tier -->
+          <div class="mb-4">
+            <label class="form-label small text-secondary fw-bold mb-1">Comfort Tier</label>
+            <div class="d-flex gap-2">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="calc-tier" id="tier-budget" value="budget">
+                <label class="form-check-label small" for="tier-budget">Budget</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="calc-tier" id="tier-mid" value="mid" checked>
+                <label class="form-check-label small" for="tier-mid">Mid-Range</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="calc-tier" id="tier-lux" value="luxury">
+                <label class="form-check-label small" for="tier-lux">Luxury</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Result Display -->
+          <div class="p-3 bg-white rounded-3 border mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="text-muted small">Estimated Total Trip Cost:</span>
+              <span class="fs-4 fw-bold text-success" id="calc-total-display">₹30,400</span>
+            </div>
+            <div class="d-flex justify-content-between text-muted small border-top pt-2">
+              <span>Per Person: <strong id="calc-per-person-display">₹15,200</strong></span>
+              <span>Stay: <strong id="calc-stay-display">₹12,160</strong></span>
+              <span>Food: <strong id="calc-food-display">₹7,600</strong></span>
+            </div>
+          </div>
+
+          <a href="{{ url_for('plan') }}" id="calc-apply-btn" class="btn btn-primary-gradient btn-sm w-100 text-center">
+            <i class="fas fa-arrow-right me-1"></i> Plan with This Budget
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sample Testimonials Section (Clearly Labeled) -->
+<section class="py-5 bg-main">
+  <div class="container py-4">
+    <div class="text-center max-w-700 mx-auto mb-5">
+      <span class="text-primary fw-bold text-uppercase small letter-spacing-1">Sample Traveler Reviews</span>
+      <h2 class="fw-bold text-secondary">Loved by Explorers Worldwide</h2>
+      <p class="text-muted">
+        <em>Note: The following entries are illustrative sample testimonials reflecting typical traveler experiences.</em>
+      </p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center mb-3">
+            <div class="p-2 rounded-circle bg-warning text-white me-2">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-secondary">Pooja & Rohan Sharma</div>
+              <div class="small text-muted">Romantic Trip to Kerala • 6 Days</div>
+            </div>
+          </div>
+          <div class="text-warning small mb-2">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text-muted small mb-0">
+            "The Alleppey houseboat recommendations and Munnar tea garden route were spot on! The estimated INR budget was within 5% of our actual spending."
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center mb-3">
+            <div class="p-2 rounded-circle bg-primary text-white me-2">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-secondary">Aditya Deshmukh</div>
+              <div class="small text-muted">Solo Adventure to Manali • 5 Days</div>
+            </div>
+          </div>
+          <div class="text-warning small mb-2">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text-muted small mb-0">
+            "I loved the hidden cafe tips in Old Manali and the bad-weather indoor backups. TravelGenius AI saved me at least 15 hours of browsing forums."
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white">
+          <div class="d-flex align-items-center mb-3">
+            <div class="p-2 rounded-circle bg-success text-white me-2">
+              <i class="fas fa-quote-left"></i>
+            </div>
+            <div>
+              <div class="fw-bold text-secondary">Ananya & Family</div>
+              <div class="small text-muted">Family Vacation to Bali • 7 Days</div>
+            </div>
+          </div>
+          <div class="text-warning small mb-2">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          </div>
+          <p class="text-muted small mb-0">
+            "Traveling with two kids and specific vegetarian meal requirements seemed daunting. TravelGenius gave us a paced schedule with child-friendly stops."
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="py-5 bg-white">
+  <div class="container">
+    <div class="p-5 rounded-4 text-center text-white position-relative overflow-hidden shadow-xl" style="background: linear-gradient(135deg, #0f172a 0%, #0369a1 100%);">
+      <div class="position-relative" style="z-index: 2;">
+        <h2 class="display-6 fw-bold mb-3">Ready to Plan Your Next Journey?</h2>
+        <p class="lead text-info mb-4 max-w-700 mx-auto">
+          Generate your personalized travel itinerary in under 30 seconds with Gemini AI. Free, flexible, and tailored to you.
+        </p>
+        <a href="{{ url_for('plan') }}" class="btn btn-light fw-bold text-primary px-4 py-3 rounded-3 shadow">
+          <i class="fas fa-paper-plane me-2"></i> Start Planning for Free
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/budget_calculator.js') }}"></script>
+{% endblock %}

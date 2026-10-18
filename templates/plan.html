@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block title %}Smart AI Trip Planner – TravelGenius AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="text-center max-w-700 mx-auto mb-5 no-print">
+    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 mb-2">
+      <i class="fas fa-sparkles me-1"></i> AI Travel Architect
+    </span>
+    <h1 class="fw-bold text-secondary display-6">Smart AI Trip Planner</h1>
+    <p class="text-muted">
+      Enter your travel dates, budget, starting point, and favorite activities.
+      Our generative travel AI synthesizes a personalized, day-by-day itinerary in seconds.
+    </p>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+
+      <!-- Planner Form Card -->
+      <div class="planner-form-card mb-5">
+        <form id="trip-planner-form">
+          
+          <!-- Origin & Destination -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <label for="starting_city" class="form-label-custom">
+                <i class="fas fa-plane-departure text-primary"></i> Starting City / Origin <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control-custom" id="starting_city" name="starting_city" 
+                     placeholder="e.g. Mumbai, New Delhi, Bengaluru" 
+                     value="{{ prefill_starting_city or 'Mumbai' }}" required>
+            </div>
+            
+            <div class="col-md-6">
+              <label for="destination" class="form-label-custom">
+                <i class="fas fa-map-marker-alt text-danger"></i> Destination City or Country <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control-custom" id="destination" name="destination" 
+                     placeholder="e.g. Goa, Manali, Kashmir, Paris, Bali" 
+                     value="{{ prefill_destination or '' }}" required>
+            </div>
+          </div>
+
+          <!-- Dates & Duration -->
+          <div class="row g-4 mb-4 align-items-end">
+            <div class="col-md-5">
+              <label for="departure_date" class="form-label-custom">
+                <i class="far fa-calendar-alt text-primary"></i> Departure Date <span class="text-danger">*</span>
+              </label>
+              <input type="date" class="form-control-custom" id="departure_date" name="departure_date" required>
+            </div>
+
+            <div class="col-md-5">
+              <label for="return_date" class="form-label-custom">
+                <i class="far fa-calendar-check text-primary"></i> Return Date <span class="text-danger">*</span>
+              </label>
+              <input type="date" class="form-control-custom" id="return_date" name="return_date" required>
+            </div>
+
+            <div class="col-md-2 text-md-center">
+              <div id="trip-duration-display" class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fs-6 w-100">
+                4 Days
+              </div>
+            </div>
+          </div>
+
+          <!-- Travelers & Budget -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-3 col-6">
+              <label class="form-label-custom">
+                <i class="fas fa-user text-primary"></i> Adults (12+ yrs)
+              </label>
+              <div class="counter-box">
+                <button type="button" class="counter-btn" id="adults-minus">&minus;</button>
+                <div class="counter-display" id="adults-count">2</div>
+                <input type="hidden" id="adults-input" name="adults" value="2">
+                <button type="button" class="counter-btn" id="adults-plus">&plus;</button>
+              </div>
+            </div>
+
+            <div class="col-md-3 col-6">
+              <label class="form-label-custom">
+                <i class="fas fa-child text-primary"></i> Children (0-11 yrs)
+              </label>
+              <div class="counter-box">
+                <button type="button" class="counter-btn" id="children-minus">&minus;</button>
+                <div class="counter-display" id="children-count">0</div>
+                <input type="hidden" id="children-input" name="children" value="0">
+                <button type="button" class="counter-btn" id="children-plus">&plus;</button>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label for="budget_inr" class="form-label-custom">
+                <i class="fas fa-rupee-sign text-success"></i> Total Budget in INR (₹) <span class="text-danger">*</span>
+              </label>
+              <input type="number" class="form-control-custom" id="budget_inr" name="budget_inr" 
+                     placeholder="e.g. 50000" min="1000" step="500" value="50000" required>
+              
+              <!-- Quick Select Budget Pills -->
+              <div class="preset-pills">
+                <span class="preset-pill" data-amount="25000">₹25,000</span>
+                <span class="preset-pill active" data-amount="50000">₹50,000</span>
+                <span class="preset-pill" data-amount="100000">₹1,00,000</span>
+                <span class="preset-pill" data-amount="200000">₹2,00,000</span>
+                <span class="preset-pill" data-amount="350000">₹3,50,000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Travel Style & Accommodation -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <label for="travel_style" class="form-label-custom">
+                <i class="fas fa-compass text-primary"></i> Travel Style
+              </label>
+              <select class="form-select-custom" id="travel_style" name="travel_style">
+                <option value="Balanced" selected>Balanced & Comprehensive</option>
+                <option value="Budget">Budget & Backpacker</option>
+                <option value="Adventure">Adventure & Outdoor Thrills</option>
+                <option value="Luxury">Luxury & Fine Dining</option>
+                <option value="Family">Family Friendly & Kid Paced</option>
+                <option value="Romantic">Romantic & Couples Retreat</option>
+                <option value="Solo">Solo Traveler & Exploration</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="accommodation_pref" class="form-label-custom">
+                <i class="fas fa-hotel text-primary"></i> Accommodation Preference
+              </label>
+              <select class="form-select-custom" id="accommodation_pref" name="accommodation_pref">
+                <option value="3-Star Hotel / Comfortable Resort" selected>3-Star Hotel / Comfortable Resort</option>
+                <option value="Hostel / Backpacker Bunk">Hostel / Backpacker Bunk</option>
+                <option value="Budget Hotel / Guesthouse">Budget Hotel / Guesthouse</option>
+                <option value="4-Star Premium Hotel">4-Star Premium Hotel</option>
+                <option value="5-Star Luxury Resort / Heritage Palace">5-Star Luxury Resort / Heritage Palace</option>
+                <option value="Homestay / Airbnb Apartment">Homestay / Airbnb Apartment</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Transportation & Dietary -->
+          <div class="row g-4 mb-4">
+            <div class="col-md-6">
+              <label for="transport_pref" class="form-label-custom">
+                <i class="fas fa-route text-primary"></i> Transportation Preference
+              </label>
+              <select class="form-select-custom" id="transport_pref" name="transport_pref">
+                <option value="Flight / Local Cabs" selected>Flight + Local Cabs / Taxis</option>
+                <option value="Express Train / Local Taxis">Express Train + Local Taxis / Autos</option>
+                <option value="Self-Drive Rental Car / Scooter">Self-Drive Rental Car / Scooter</option>
+                <option value="Public Transit / Metro & Buses">Public Transit (Metro, Local Buses)</option>
+                <option value="Private Chauffeur Tour">Private Chauffeur Throughout</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="dietary_pref" class="form-label-custom">
+                <i class="fas fa-utensils text-primary"></i> Dietary Preference
+              </label>
+              <select class="form-select-custom" id="dietary_pref" name="dietary_pref">
+                <option value="No Restrictions" selected>No Restrictions (All Cuisines)</option>
+                <option value="Vegetarian">Pure Vegetarian</option>
+                <option value="Vegan">Vegan (Plant-based)</option>
+                <option value="Jain Vegetarian">Jain Vegetarian (No onion/garlic/root veggies)</option>
+                <option value="Halal">Halal</option>
+                <option value="Non-Vegetarian">Non-Vegetarian Focused</option>
+                <option value="Gluten-Free">Gluten-Free</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Interests Multi-select -->
+          <div class="mb-4">
+            <label class="form-label-custom">
+              <i class="fas fa-heart text-danger"></i> What are your key travel interests?
+            </label>
+            <div class="d-flex flex-wrap gap-2 pt-1">
+              <div>
+                <input type="checkbox" id="int-nature" class="interest-badge-checkbox" value="Nature" checked>
+                <label for="int-nature" class="interest-badge-label">
+                  <i class="fas fa-tree text-success"></i> Nature
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-beaches" class="interest-badge-checkbox" value="Beaches" checked>
+                <label for="int-beaches" class="interest-badge-label">
+                  <i class="fas fa-umbrella-beach text-info"></i> Beaches
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-mountains" class="interest-badge-checkbox" value="Mountains">
+                <label for="int-mountains" class="interest-badge-label">
+                  <i class="fas fa-mountain text-secondary"></i> Mountains
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-food" class="interest-badge-checkbox" value="Food" checked>
+                <label for="int-food" class="interest-badge-label">
+                  <i class="fas fa-utensils text-warning"></i> Food & Dining
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-culture" class="interest-badge-checkbox" value="Culture" checked>
+                <label for="int-culture" class="interest-badge-label">
+                  <i class="fas fa-monument text-primary"></i> Culture
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-shopping" class="interest-badge-checkbox" value="Shopping">
+                <label for="int-shopping" class="interest-badge-label">
+                  <i class="fas fa-shopping-bag text-danger"></i> Shopping
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-history" class="interest-badge-checkbox" value="History">
+                <label for="int-history" class="interest-badge-label">
+                  <i class="fas fa-landmark text-secondary"></i> History
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-photography" class="interest-badge-checkbox" value="Photography" checked>
+                <label for="int-photography" class="interest-badge-label">
+                  <i class="fas fa-camera text-purple"></i> Photography
+                </label>
+              </div>
+              <div>
+                <input type="checkbox" id="int-nightlife" class="interest-badge-checkbox" value="Nightlife">
+                <label for="int-nightlife" class="interest-badge-label">
+                  <i class="fas fa-cocktail text-primary"></i> Nightlife
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Additional Notes -->
+          <div class="mb-4">
+            <label for="additional_notes" class="form-label-custom">
+              <i class="fas fa-comment-alt text-primary"></i> Additional Travel Requirements (Optional)
+            </label>
+            <textarea class="form-control-custom" id="additional_notes" name="additional_notes" rows="2" 
+                      placeholder="e.g. Need wheelchair accessibility, traveling with a toddler, slow-paced mornings preferred, anniversary celebration"></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-primary-gradient w-100 justify-content-center py-3 fs-5 shadow-lg">
+            <i class="fas fa-sparkles"></i> Generate AI Itinerary
+          </button>
+        </form>
+      </div>
+
+      <!-- Loading Stepper Overlay (Hidden by Default) -->
+      <div id="planner-loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner-circle"></div>
+        <h3 class="fw-bold text-secondary mb-2">Creating Your Dream Itinerary</h3>
+        <p class="text-muted">Gemini AI is analyzing millions of travel combinations tailored to your preferences...</p>
+
+        <div class="stepper-steps">
+          <div class="step-item" id="step-1">
+            <div class="step-icon-circle"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <div>Analyzing preferences, dates, and ₹ INR budget constraints...</div>
+          </div>
+          <div class="step-item" id="step-2">
+            <div class="step-icon-circle"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <div>Consulting Gemini AI travel guide for local attractions & hidden gems...</div>
+          </div>
+          <div class="step-item" id="step-3">
+            <div class="step-icon-circle"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <div>Crafting morning, afternoon, and evening schedules with local food spots...</div>
+          </div>
+          <div class="step-item" id="step-4">
+            <div class="step-icon-circle"><i class="fas fa-circle-notch fa-spin"></i></div>
+            <div>Finalizing budget breakdown, interactive checklist, and weather backups...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result Container (Populated by planner.js) -->
+      <div id="itinerary-result-container" class="itinerary-container"></div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/planner.js') }}"></script>
+{% endblock %}

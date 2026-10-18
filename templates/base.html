@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}TravelGenius AI – Smart Travel Planner{% endblock %}</title>
+  <meta name="description" content="Personalized Generative AI travel itineraries tailored to your dates, budget in INR, and interests.">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/logo.svg') }}">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  
+  <!-- Custom Core & Print Styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/print.css') }}" media="print">
+  
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Main Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="TravelGenius AI Logo" class="me-2">
+      </a>
+      
+      <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars text-secondary fs-4"></i>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">
+              <i class="fas fa-home me-1"></i> Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'plan' %}active{% endif %}" href="{{ url_for('plan') }}">
+              <i class="fas fa-magic me-1"></i> Plan a Trip
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'explore' %}active{% endif %}" href="{{ url_for('explore') }}">
+              <i class="fas fa-compass me-1"></i> Explore Destinations
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'my_trips' %}active{% endif %}" href="{{ url_for('my_trips') }}">
+              <i class="fas fa-suitcase me-1"></i> My Trips
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'about' %}active{% endif %}" href="{{ url_for('about') }}">
+              <i class="fas fa-info-circle me-1"></i> About
+            </a>
+          </li>
+        </ul>
+        
+        <div class="d-flex align-items-center gap-2">
+          <!-- API Status Badge (opens modal) -->
+          <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#apiKeyModal" title="Gemini AI Configuration">
+            <span id="navbar-api-badge" data-server-key="{{ 'true' if has_api_key else 'false' }}" class="badge bg-secondary-subtle text-secondary px-2 py-1">
+              <i class="fas fa-cog me-1"></i> AI Settings
+            </span>
+          </a>
+          
+          <a href="{{ url_for('plan') }}" class="btn btn-primary-gradient btn-sm">
+            <i class="fas fa-paper-plane me-1"></i> Plan My Trip
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content Block -->
+  <main class="flex-grow-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- API Key Settings Modal -->
+  <div class="modal fade" id="apiKeyModal" tabindex="-1" aria-labelledby="apiKeyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title fw-bold text-secondary" id="apiKeyModalLabel">
+            <i class="fas fa-key text-primary me-2"></i> Gemini AI Configuration
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body py-3">
+          <p class="text-muted small">
+            TravelGenius AI uses Google's Gemini models for real-time generative itinerary synthesis.
+            If no key is configured, the application runs seamlessly in <strong>Demo Mode</strong> with realistic sample plans.
+          </p>
+
+          <div class="mb-3">
+            <label for="user-gemini-key-input" class="form-label fw-bold small text-secondary">
+              Custom Gemini API Key (Optional)
+            </label>
+            <div class="input-group">
+              <input type="password" id="user-gemini-key-input" class="form-control" placeholder="AIzaSy...">
+              <button class="btn btn-outline-secondary" type="button" onclick="const f=document.getElementById('user-gemini-key-input'); f.type = f.type === 'password' ? 'text' : 'password';">
+                <i class="fas fa-eye"></i>
+              </button>
+            </div>
+            <div class="form-text small">
+              Key is stored privately in your browser session/localStorage and used for live itinerary generation.
+              Get a free key from <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a>.
+            </div>
+          </div>
+
+          <div class="p-3 bg-light rounded-3 small">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted">Server Environment Key:</span>
+              <span class="fw-bold {{ 'text-success' if has_api_key else 'text-warning' }}">
+                {{ 'Configured in .env' if has_api_key else 'Not Set (Demo Mode Ready)' }}
+              </span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted">Recommended Model:</span>
+              <span class="fw-bold text-primary">gemini-2.5-flash</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-0 pt-0">
+          <button type="button" class="btn btn-light btn-sm" id="btn-clear-custom-key">Clear Key</button>
+          <button type="button" class="btn btn-primary-gradient btn-sm" id="btn-save-custom-key">Save & Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer-custom">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+          <div class="d-flex align-items-center mb-3">
+            <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="TravelGenius AI" height="36" class="me-2">
+          </div>
+          <p class="small text-muted mb-3">
+            Your Next Adventure, Planned by AI. TravelGenius AI creates personalized, day-by-day itineraries tailored to your dates, budget in INR, travel style, and interests.
+          </p>
+          <div class="d-flex gap-3 text-muted">
+            <a href="https://github.com" target="_blank" rel="noopener" class="fs-5" title="GitHub Repository"><i class="fab fa-github"></i></a>
+            <a href="https://render.com" target="_blank" rel="noopener" class="fs-5" title="Deployment on Render"><i class="fas fa-cloud"></i></a>
+            <a href="https://aistudio.google.com" target="_blank" rel="noopener" class="fs-5" title="Gemini AI Powered"><i class="fas fa-sparkles"></i></a>
+          </div>
+        </div>
+        
+        <div class="col-lg-2 col-md-6 col-6">
+          <h5>Quick Links</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="{{ url_for('index') }}">Home</a></li>
+            <li class="mb-2"><a href="{{ url_for('plan') }}">Plan a Trip</a></li>
+            <li class="mb-2"><a href="{{ url_for('explore') }}">Explore Destinations</a></li>
+            <li class="mb-2"><a href="{{ url_for('my_trips') }}">My Trips</a></li>
+            <li class="mb-2"><a href="{{ url_for('about') }}">About Project</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 col-6">
+          <h5>Top Destinations</h5>
+          <ul class="list-unstyled small">
+            <li class="mb-2"><a href="{{ url_for('plan', destination='Goa') }}">Goa Beach Escape</a></li>
+            <li class="mb-2"><a href="{{ url_for('plan', destination='Kashmir') }}">Kashmir Paradise</a></li>
+            <li class="mb-2"><a href="{{ url_for('plan', destination='Manali') }}">Manali Snow & Valleys</a></li>
+            <li class="mb-2"><a href="{{ url_for('plan', destination='Paris') }}">Paris City of Light</a></li>
+            <li class="mb-2"><a href="{{ url_for('plan', destination='Bali') }}">Bali Island of the Gods</a></li>
+          </ul>
+        </div>
+        
+        <div class="col-lg-3 col-md-6">
+          <h5>Disclaimers</h5>
+          <p class="small text-muted mb-2">
+            All prices, flight/hotel estimates, and schedules are approximations in INR. Verify live rates and operational hours before travel.
+          </p>
+          <div class="badge bg-secondary-subtle text-secondary small p-2">
+            <i class="fas fa-shield-alt me-1"></i> Data stored locally in SQLite
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom d-flex flex-wrap justify-content-between align-items-center text-muted">
+        <div>
+          &copy; 2025 TravelGenius AI. All rights reserved.
+        </div>
+        <div class="small">
+          Built with Python, Flask & Google Gemini AI.
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Global App Utilities -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

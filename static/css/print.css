@@ -1,0 +1,131 @@
+/* ==========================================================================
+   TravelGenius AI – Clean Print Stylesheet for PDF & Physical Printing
+   ========================================================================== */
+
+@media print {
+  /* Hide non-printable web elements */
+  nav,
+  .navbar-custom,
+  footer,
+  .footer-custom,
+  .hero-wrapper,
+  .planner-form-card,
+  .loading-overlay,
+  #toast-container,
+  .btn,
+  .action-bar-buttons,
+  .no-print,
+  .modal,
+  .preset-pills,
+  .day-tab-pill {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .container, .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Make sure the itinerary is displayed */
+  #itinerary-result-container {
+    display: block !important;
+  }
+
+  /* Header banner optimized for print */
+  .itinerary-header-banner {
+    background: #f3f4f6 !important;
+    color: #111827 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 6px !important;
+    padding: 18px !important;
+    margin-bottom: 20px !important;
+    box-shadow: none !important;
+    page-break-after: avoid;
+  }
+
+  .itinerary-header-banner h1,
+  .itinerary-header-banner h2,
+  .itinerary-header-banner h3 {
+    color: #111827 !important;
+  }
+
+  .stat-widget {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    color: #111827 !important;
+  }
+
+  .stat-label {
+    color: #6b7280 !important;
+  }
+
+  .stat-value {
+    color: #111827 !important;
+  }
+
+  /* Show all days sequentially in print mode */
+  .day-schedule-pane {
+    display: block !important;
+    opacity: 1 !important;
+    page-break-inside: avoid;
+    margin-bottom: 24px !important;
+  }
+
+  .day-schedule-card {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 6px !important;
+    padding: 16px !important;
+    box-shadow: none !important;
+  }
+
+  .time-slot-card {
+    background: #f9fafb !important;
+    border-left: 3px solid #4b5563 !important;
+    padding: 10px !important;
+    margin-bottom: 10px !important;
+    page-break-inside: avoid;
+  }
+
+  /* Tables & Lists */
+  .table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  .table td, .table th {
+    background-color: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Packing list checkmarks */
+  .packing-item {
+    page-break-inside: avoid;
+  }
+
+  /* Page break rules */
+  h2, h3, h4 {
+    page-break-after: avoid;
+  }
+
+  .print-page-break {
+    page-break-before: always;
+  }
+
+  /* Add print header & footer timestamp */
+  @page {
+    margin: 1.5cm;
+    size: A4 portrait;
+  }
+}

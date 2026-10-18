@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}System Hiccup – TravelGenius AI{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center my-auto">
+  <div class="py-5 max-w-700 mx-auto">
+    <div class="display-1 fw-bold text-danger mb-3">500</div>
+    <div class="p-4 rounded-circle bg-danger-subtle text-danger d-inline-block mb-3">
+      <i class="fas fa-exclamation-triangle fa-3x"></i>
+    </div>
+    <h2 class="fw-bold text-secondary mb-2">Unexpected Turbulence</h2>
+    <p class="text-muted mb-4">
+      Something went wrong on our end while processing your request. Please try again or return home.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{{ url_for('index') }}" class="btn btn-primary-gradient">
+        <i class="fas fa-home me-1"></i> Back to Home
+      </a>
+      <button class="btn btn-outline-secondary" onclick="window.location.reload();">
+        <i class="fas fa-redo me-1"></i> Reload Page
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}

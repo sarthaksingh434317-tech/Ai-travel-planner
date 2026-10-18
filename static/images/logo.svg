@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <!-- Gradient Definitions -->
+  <defs>
+    <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" />
+      <stop offset="50%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#10b981" />
+    </linearGradient>
+    <linearGradient id="planeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#e0f2fe" />
+    </linearGradient>
+  </defs>
+
+  <!-- Compass / Globe Icon with Plane -->
+  <circle cx="24" cy="24" r="20" fill="url(#logoGrad)" />
+  <circle cx="24" cy="24" r="18" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.6"/>
+  
+  <!-- Stylized Paper Airplane / Jet -->
+  <path d="M14 26 L34 16 L25 33 L22 25 Z" fill="url(#planeGrad)" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.25))" />
+  <path d="M22 25 L34 16 L27 24 Z" fill="#bae6fd" />
+
+  <!-- Wordmark -->
+  <text x="52" y="27" font-family="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" font-size="20" font-weight="800" fill="#0f172a" letter-spacing="-0.5">
+    Travel<tspan fill="#0284c7">Genius</tspan>
+  </text>
+  
+  <!-- AI Pill Badge -->
+  <rect x="168" y="14" width="26" height="15" rx="7.5" fill="url(#logoGrad)" />
+  <text x="181" y="25" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="9" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="0.5">AI</text>
+  
+  <text x="53" y="38" font-family="'Plus Jakarta Sans', 'Inter', sans-serif" font-size="8.5" font-weight="600" fill="#64748b" letter-spacing="1">SMART TRAVEL PLANNER</text>
+</svg>

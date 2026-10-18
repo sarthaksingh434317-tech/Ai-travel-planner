@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#091E3A" />
+      <stop offset="35%" stop-color="#1B3B6F" />
+      <stop offset="70%" stop-color="#2D5A88" />
+      <stop offset="100%" stop-color="#065A82" />
+    </linearGradient>
+    <linearGradient id="mountainGrad1" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#1D436D" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#0F243E" />
+    </linearGradient>
+    <linearGradient id="mountainGrad2" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#13315C" />
+      <stop offset="100%" stop-color="#091A2F" />
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sky Background -->
+  <rect width="100%" height="100%" fill="url(#skyGrad)" />
+
+  <!-- Stars / Dots -->
+  <g fill="#ffffff" opacity="0.3">
+    <circle cx="200" cy="150" r="1.5" />
+    <circle cx="450" cy="90" r="2" />
+    <circle cx="780" cy="220" r="1.5" />
+    <circle cx="1100" cy="110" r="2.5" />
+    <circle cx="1400" cy="180" r="1.5" />
+    <circle cx="1720" cy="95" r="2" />
+    <circle cx="950" cy="300" r="1" />
+  </g>
+
+  <!-- Distant Mountain Ridge -->
+  <path d="M0 650 L280 480 L520 580 L850 420 L1200 590 L1550 440 L1920 620 L1920 1080 L0 1080 Z" fill="url(#mountainGrad1)" />
+  
+  <!-- Closer Mountain Silhouette -->
+  <path d="M0 780 L220 640 L480 740 L720 600 L1040 760 L1380 580 L1680 720 L1920 660 L1920 1080 L0 1080 Z" fill="url(#mountainGrad2)" />
+
+  <!-- Atmospheric Glow along bottom -->
+  <rect y="600" width="100%" height="480" fill="url(#glowGrad)" />
+
+  <!-- Flight Path Arc -->
+  <path d="M100 850 Q 700 200 1700 350" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="8 8" opacity="0.4" />
+</svg>

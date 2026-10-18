@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Top Destinations – TravelGenius AI{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  
+  <!-- Header -->
+  <div class="text-center max-w-700 mx-auto mb-5">
+    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 mb-2">
+      <i class="fas fa-globe-asia me-1"></i> World Catalog
+    </span>
+    <h1 class="fw-bold text-secondary display-6">Explore Curated Destinations</h1>
+    <p class="text-muted">
+      Discover handpicked domestic getaways and international wonderlands.
+      Filter by budget, travel vibe, or region, and launch an AI-generated itinerary with a single click.
+    </p>
+  </div>
+
+  <!-- Filters & Search Toolbar -->
+  <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-5">
+    <div class="row g-3 align-items-center">
+      
+      <!-- Search -->
+      <div class="col-lg-4 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text bg-light border-end-0 text-muted"><i class="fas fa-search"></i></span>
+          <input type="text" id="search-destination" class="form-control bg-light border-start-0" 
+                 placeholder="Search by city, country, or landmark...">
+        </div>
+      </div>
+
+      <!-- Scope Filter -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <select id="filter-region" class="form-select bg-light">
+          <option value="all">Region: All</option>
+          <option value="Domestic">Domestic (India)</option>
+          <option value="International">International</option>
+        </select>
+      </div>
+
+      <!-- Budget Filter -->
+      <div class="col-lg-2 col-md-6 col-6">
+        <select id="filter-budget" class="form-select bg-light">
+          <option value="all">Budget: All</option>
+          <option value="Budget">Budget Tier</option>
+          <option value="Mid-Range">Mid-Range</option>
+          <option value="Luxury">Luxury</option>
+        </select>
+      </div>
+
+      <!-- Travel Style Filter -->
+      <div class="col-lg-3 col-md-6">
+        <select id="filter-style" class="form-select bg-light">
+          <option value="all">Style: All Styles</option>
+          <option value="Beaches">Beaches & Coastal</option>
+          <option value="Mountains">Mountains & Snow</option>
+          <option value="Culture">Culture & Heritage</option>
+          <option value="Romantic">Romantic & Couples</option>
+          <option value="Adventure">Adventure & Outdoor</option>
+          <option value="Luxury">Luxury & Shopping</option>
+        </select>
+      </div>
+
+      <!-- Reset -->
+      <div class="col-lg-1 col-md-12 text-lg-end">
+        <button id="btn-reset-filters" class="btn btn-outline-secondary w-100" title="Reset Filters">
+          <i class="fas fa-redo-alt"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Count Badge -->
+    <div class="d-flex justify-content-between align-items-center border-top mt-3 pt-3 small text-muted">
+      <span id="destinations-count-badge" class="fw-bold text-secondary">Showing {{ destinations|length }} destinations</span>
+      <span><i class="fas fa-info-circle me-1"></i> Estimates in INR. Verify current seasonal prices.</span>
+    </div>
+  </div>
+
+  <!-- Destinations Grid -->
+  <div class="row g-4" id="destinations-grid">
+    {% for dest in destinations %}
+    <div class="col-lg-4 col-md-6 destination-item"
+         data-id="{{ dest.id }}"
+         data-name="{{ dest.name }}"
+         data-country="{{ dest.country }}"
+         data-region="{{ dest.region }}"
+         data-budget="{{ dest.budget_category }}"
+         data-styles="{{ dest.travel_styles|join(' ') }}"
+         data-desc="{{ dest.description }}">
+      
+      <div class="travel-card">
+        <div class="card-img-wrapper">
+          <img src="{{ dest.image_url }}" alt="{{ dest.name }}" onerror="this.src='{{ url_for('static', filename='images/hero-bg.svg') }}'">
+          <span class="card-badge {{ 'card-badge-domestic' if dest.region == 'Domestic' else 'card-badge-intl' }}">
+            {{ dest.region }}
+          </span>
+          <span class="card-badge-budget">
+            {{ dest.budget_category }}
+          </span>
+        </div>
+        
+        <div class="travel-card-body">
+          <div class="d-flex justify-content-between align-items-start mb-1">
+            <h4 class="fw-bold text-secondary mb-0">{{ dest.name }}</h4>
+            <span class="badge bg-light text-secondary border">{{ dest.country }}</span>
+          </div>
+          
+          <div class="text-primary small fw-semibold mb-2">{{ dest.tagline }}</div>
+          
+          <p class="text-muted small flex-grow-1 mb-3">
+            {{ dest.description }}
+          </p>
+
+          <!-- Highlights & Season -->
+          <div class="bg-light p-2 rounded-3 small mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <span class="text-muted"><i class="far fa-sun text-warning me-1"></i> Best Season:</span>
+              <span class="fw-bold text-secondary">{{ dest.best_time.split('(')[0] }}</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span class="text-muted"><i class="fas fa-rupee-sign text-success me-1"></i> Est. Budget:</span>
+              <span class="fw-bold text-success">{{ dest.budget_range_inr }}</span>
+            </div>
+          </div>
+
+          <!-- Popular Attractions Badges -->
+          <div class="mb-3">
+            <div class="text-muted small mb-1 fw-bold">Popular Highlights:</div>
+            <div class="d-flex flex-wrap gap-1">
+              {% for attr in dest.popular_attractions[:3] %}
+              <span class="badge bg-white text-secondary border small">{{ attr }}</span>
+              {% endfor %}
+              {% if dest.popular_attractions|length > 3 %}
+              <span class="badge bg-white text-secondary border small">+{{ dest.popular_attractions|length - 3 }} more</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="row g-2 pt-2 border-top">
+            <div class="col-6">
+              <button class="btn btn-outline-secondary btn-sm w-100 btn-view-destination" data-dest-id="{{ dest.id }}">
+                <i class="fas fa-eye me-1"></i> Details
+              </button>
+            </div>
+            <div class="col-6">
+              <a href="{{ url_for('plan', destination=dest.name) }}" class="btn btn-primary-gradient btn-sm w-100 text-center">
+                <i class="fas fa-paper-plane me-1"></i> Plan Trip
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Empty State (Hidden by default) -->
+  <div id="explorer-empty-state" class="text-center py-5" style="display: none;">
+    <div class="p-4 rounded-circle bg-light d-inline-block mb-3">
+      <i class="fas fa-compass fa-3x text-muted"></i>
+    </div>
+    <h4 class="fw-bold text-secondary mb-2">No Destinations Found</h4>
+    <p class="text-muted mb-4">Try clearing your filters or searching for another destination.</p>
+    <button class="btn btn-primary-gradient btn-sm" onclick="document.getElementById('btn-reset-filters').click();">
+      Clear Filters
+    </button>
+  </div>
+
+  <!-- General Estimate Disclaimer -->
+  <div class="p-3 bg-light border rounded-3 text-center small text-muted mt-5">
+    <i class="fas fa-shield-alt text-primary me-1"></i>
+    <strong>Notice:</strong> All destination descriptions, best travel windows, and budget ranges are general estimates in INR.
+    Live flight costs and hotel prices vary significantly depending on booking seasonality and advance notice.
+  </div>
+
+</div>
+
+<!-- Quick View Destination Modal -->
+<div class="modal fade" id="destinationModal" tabindex="-1" aria-labelledby="destinationModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content border-0 shadow-xl rounded-4 overflow-hidden">
+      <div class="position-relative" style="height: 260px; overflow: hidden;">
+        <img id="modal-dest-img" src="" alt="" style="width: 100%; height: 100%; object-fit: cover;">
+        <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3 shadow" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(to top, rgba(15,23,42,0.95), transparent);">
+          <h3 class="text-white fw-bold mb-0" id="modal-dest-title">Destination</h3>
+          <p class="text-info small mb-0" id="modal-dest-tagline">Tagline</p>
+        </div>
+      </div>
+
+      <div class="modal-body p-4">
+        <p class="text-muted mb-4" id="modal-dest-desc">Description</p>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="small text-muted"><i class="far fa-sun text-warning me-1"></i> Best Time</div>
+              <div class="fw-bold text-secondary" id="modal-dest-season">Best time</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="small text-muted"><i class="fas fa-rupee-sign text-success me-1"></i> Est. Budget</div>
+              <div class="fw-bold text-success" id="modal-dest-budget">Budget range</div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="p-3 bg-light rounded-3">
+              <div class="small text-muted"><i class="far fa-clock text-primary me-1"></i> Ideal Stay</div>
+              <div class="fw-bold text-secondary" id="modal-dest-duration">Duration</div>
+            </div>
+          </div>
+        </div>
+
+        <h6 class="fw-bold text-secondary mb-2">Popular Attractions</h6>
+        <div class="d-flex flex-wrap gap-1 mb-4" id="modal-dest-attractions"></div>
+
+        <h6 class="fw-bold text-secondary mb-2">Key Experience Highlights</h6>
+        <ul class="list-unstyled mb-0" id="modal-dest-highlights"></ul>
+      </div>
+
+      <div class="modal-footer border-0 p-4 pt-0 d-flex justify-content-between">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+        <a href="#" id="modal-dest-plan-btn" class="btn btn-primary-gradient">
+          <i class="fas fa-magic me-1"></i> Plan This Trip with AI
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/explorer.js') }}"></script>
+{% endblock %}
